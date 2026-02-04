@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 CRIPTO_DIR = "cripto"
 DESCRIPTO_DIR = "des-cripto"
-WORDLIST = "wordlist.txt"
+DEFAULT_WORDLIST = "wordlist.txt"
 
 
 def listar_hashes():
@@ -42,15 +42,15 @@ def extrair_hash(path):
     return match.group()
 
 
-def crack_hash(target_hash):
-    if not os.path.isfile(WORDLIST):
-        print("[-] wordlist.txt não encontrada.")
+def crack_hash(target_hash, wordlist_path):
+    if not os.path.isfile(wordlist_path):
+        print(f"[-] Wordlist não encontrada: {wordlist_path}")
         sys.exit(1)
 
-    with open(WORDLIST, "r", errors="ignore") as f:
+    with open(wordlist_path, "r", errors="ignore") as f:
         total = sum(1 for _ in f)
 
-    with open(WORDLIST, "r", errors="ignore") as f:
+    with open(wordlist_path, "r", errors="ignore") as f:
         for line in tqdm(f, total=total, desc="Cracking", unit="pwd"):
             pwd = line.strip()
             if not pwd:
@@ -85,16 +85,22 @@ def main():
     )
 
     parser.add_argument(
-        "-f",
-        metavar="FILE",
-        help="Hash file path"
-    )
-
-    parser.add_argument(
         "-n",
         metavar="NUMBER",
         type=int,
-        help="Hash number from cripto/"
+        help="Número do hash na pasta cripto/"
+    )
+
+    parser.add_argument(
+        "-f",
+        metavar="FILE",
+        help="Caminho para ficheiro de hash"
+    )
+
+    parser.add_argument(
+        "-w",
+        metavar="WORDLIST",
+        help="Wordlist personalizada"
     )
 
     args = parser.parse_args()
@@ -103,8 +109,12 @@ def main():
         parser.print_help()
         sys.exit(0)
 
+    # Escolha da wordlist
+    wordlist = args.w if args.w else DEFAULT_WORDLIST
+
+    # Escolha do hash
     if args.f:
-        path = args.f
+        hash_path = args.f
 
     elif args.n:
         files = listar_hashes()
@@ -112,16 +122,17 @@ def main():
             print("[-] Número inválido.")
             sys.exit(1)
 
-        path = os.path.join(CRIPTO_DIR, files[args.n - 1])
+        hash_path = os.path.join(CRIPTO_DIR, files[args.n - 1])
 
     else:
         listar_hashes()
         sys.exit(0)
 
-    target = extrair_hash(path)
+    target = extrair_hash(hash_path)
     print(f"\n[*] Target: {target}")
+    print(f"[*] Wordlist: {wordlist}\n")
 
-    result = crack_hash(target)
+    result = crack_hash(target, wordlist)
 
     if result:
         print(f"\n[+] PASSWORD FOUND: {result}")
