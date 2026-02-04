@@ -88,7 +88,7 @@ def main():
         "-n",
         metavar="NUMBER",
         type=int,
-        help="Número do hash na pasta cripto/"
+        help="Número do hash na pasta cripto/ -n 0 para listar"
     )
 
     parser.add_argument(
