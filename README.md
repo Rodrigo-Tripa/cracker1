@@ -20,6 +20,7 @@ Designed for Alpine Linux. Fully compatible with Kali Linux and other Linux dist
 ## Directory Structure
 
 cracker1/
+
 ├── cracker1.py
 
 ├── wordlist.txt # default wordlist (optional)
