@@ -21,8 +21,11 @@ Designed for Alpine Linux. Fully compatible with Kali Linux and other Linux dist
 
 cracker1/
 ├── cracker1.py
+
 ├── wordlist.txt # default wordlist (optional)
+
 ├── cripto/ # input hashes
+
 ├── des-cripto/ # cracked results
 
 
